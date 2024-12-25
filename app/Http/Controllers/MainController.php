@@ -62,6 +62,12 @@ class MainController extends Controller
   public function editNote($id)
   {
     $id = Operations::decryptId($id);
+
+    // load note
+    $note = Note::find($id);
+
+    // show edit note view
+    return view('edit_note', compact('note'));
   }
 
 
