@@ -68,7 +68,7 @@ class AuthController extends Controller
             'username' => $user->username
         ]]);
 
-        echo 'Login com sucesso';
+        return redirect()->to('/');
     }
 
     public function logout()
