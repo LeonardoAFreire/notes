@@ -14,7 +14,10 @@ class MainController extends Controller
   {
     // load user's notes
     $id = session('user.id');
-    $notes = User::find($id)->notes()->get()->toArray();
+    $notes = User::find($id)
+      ->notes()
+      ->whereNull('deleted_at')
+      ->get()->toArray();
 
     return view('home', compact('notes'));
   }
@@ -112,5 +115,29 @@ class MainController extends Controller
   public function deleteNote($id)
   {
     $id = Operations::decryptId($id);
+
+    // load note
+    $note = Note::find($id);
+
+    // show delete note confirmation
+
+    return view('delete_note', compact('note'));
+  }
+
+
+  public function deleteNoteConfirm($id)
+  {
+    // check if id is encrypted
+    $id = Operations::decryptId($id);
+
+    // load note
+    $note = Note::find($id);
+
+    // Soft Delete using use SoftDelete (property in model)
+    // With force delete can remove the register.
+    $note->delete();
+
+    // return to home
+    return redirect()->route('home');
   }
 }
